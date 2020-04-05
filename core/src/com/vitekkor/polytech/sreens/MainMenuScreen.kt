@@ -5,7 +5,6 @@ import com.badlogic.gdx.Input
 import com.badlogic.gdx.Screen
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.scenes.scene2d.InputEvent
-import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener
@@ -21,16 +20,17 @@ class MainMenuScreen(core: Core) : Screen {
     private var stage: PlayStage = PlayStage(ScreenViewport())
     private var play: TextButton
     private var exit: TextButton
+    private var settings: TextButton
     private var table: Table
-    private var labelStyle: Label.LabelStyle
 
     init {
-        labelStyle = buttons.labelStyle
         val textButtonStyle = buttons.textButtonStyle
         table = Table()
         table.row().pad(20F)
         table.center()
         table.setFillParent(true)
+
+        //create button "play" and add listener to it
         play = TextButton("Play", textButtonStyle)
         play.addListener(object : ClickListener() {
             override fun touchUp(event: InputEvent?, x: Float, y: Float, pointer: Int, button: Int) {
@@ -38,6 +38,8 @@ class MainMenuScreen(core: Core) : Screen {
                 dispose()
             }
         })
+
+        //create button "exit" and add listener to it
         exit = TextButton("Exit", textButtonStyle)
         exit.addListener(object : ClickListener() {
             override fun touchUp(event: InputEvent?, x: Float, y: Float, pointer: Int, button: Int) {
@@ -45,12 +47,24 @@ class MainMenuScreen(core: Core) : Screen {
                 dispose()
             }
         })
+
+        settings = TextButton("Settings", textButtonStyle)
+        settings.addListener(object : ClickListener() {
+            override fun touchUp(event: InputEvent?, x: Float, y: Float, pointer: Int, button: Int) {
+                //game.screen = SettingsScreen(game)
+                dispose()
+            }
+        })
         table.add(play)
+        table.row()
+        table.add(settings)
         table.row()
         table.add(exit)
         stage.addActor(table)
         Gdx.input.inputProcessor = stage
         Gdx.input.setCatchKey(Input.Keys.BACK, true)
+
+        //listener for the Back key
         stage.setHardKeyListener(object : PlayStage.OnHardKeyListener {
             override fun onHardKey(keyCode: Int, state: Int) {
                 if (keyCode == Input.Keys.BACK && state == 1) {
