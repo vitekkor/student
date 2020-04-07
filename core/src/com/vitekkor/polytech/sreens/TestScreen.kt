@@ -4,11 +4,13 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.Screen
 import com.badlogic.gdx.graphics.GL20
-import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
-import com.badlogic.gdx.scenes.scene2d.ui.Image
+import com.badlogic.gdx.scenes.scene2d.InputEvent
 import com.badlogic.gdx.scenes.scene2d.ui.Table
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener
 import com.badlogic.gdx.utils.viewport.ScreenViewport
+import com.kotcrab.vis.ui.VisUI
+import com.kotcrab.vis.ui.widget.VisTextButton
 import com.vitekkor.polytech.Core
 import com.vitekkor.polytech.objects.PlayStage
 import com.vitekkor.polytech.objects.Student
@@ -16,25 +18,43 @@ import com.vitekkor.polytech.objects.Student
 class TestScreen(core: Core) : Screen {
     private val game = core
 
-    //private val buttons = core.buttons
     private var stage: PlayStage = PlayStage(ScreenViewport())
     private var table: Table = Table()
     private var studentStyle = TextureAtlas(Gdx.files.internal("images/student.atlas"))
+    private var space: VisTextButton
+    private var actor1: Student
 
     init {
-        //val ss = studentStyle.regions
-        val actor1 = Student(studentStyle)
+        VisUI.load()
+        actor1 = Student(studentStyle)
         table.center()
         table.setFillParent(true)
         stage.addActor(actor1)
-        //actor1.setSize(240F, 160F)
+        space = VisTextButton("")
+        space.setPosition(Gdx.graphics.width - 120F, 240f)
+        stage.addActor(space)
+        space.addListener(object : ClickListener() {
+            override fun touchUp(event: InputEvent?, x: Float, y: Float, pointer: Int, button: Int) {
+                actor1.jump()
+            }
+        })
         Gdx.input.inputProcessor = stage
         Gdx.input.setCatchKey(Input.Keys.BACK, true)
+        Gdx.input.setCatchKey(Input.Keys.SPACE, true)
         stage.setHardKeyListener(object : PlayStage.OnHardKeyListener {
             override fun onHardKey(keyCode: Int, state: Int) {
                 if (keyCode == Input.Keys.BACK && state == 1) {
                     core.screen = MainMenuScreen(core)
                     dispose()
+                }
+                if (keyCode == Input.Keys.SPACE && state == 1) {
+                    actor1.jump()
+                }
+                if (keyCode == Input.Keys.LEFT && state == 1) {
+                    actor1.go(false)
+                }
+                if (keyCode == Input.Keys.RIGHT && state == 1) {
+                    actor1.go(true)
                 }
             }
         })
@@ -49,6 +69,7 @@ class TestScreen(core: Core) : Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
         stage.act()
         stage.draw()
+        stage.act()
     }
 
     override fun pause() {}

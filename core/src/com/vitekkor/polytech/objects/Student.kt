@@ -6,12 +6,16 @@ import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.scenes.scene2d.Actor
+import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction
+import com.badlogic.gdx.utils.Pool
 
 
-class Student(textureAtlas: TextureAtlas) : Actor() {
-    private val regions = textureAtlas.regions
+class Studen(textureAtlas: TextureAtlas) : Actor() {
+
+    private var moveTo = MoveToAction()
+    private var regions = textureAtlas.regions
     private var animation: Animation<Any>? = null
-    private var stateTime = 0f
+    var stateTime = 0f
     private var positionX = 0f
     private var positionY = 0f
     private var myWidth = 0f
@@ -42,5 +46,16 @@ class Student(textureAtlas: TextureAtlas) : Actor() {
 
     override fun setScale(scaleXY: Float) {
         setSize(width * scaleXY, height * scaleXY)
+    }
+
+    fun setRegion(newTextureAtlas: TextureAtlas) {
+        regions = newTextureAtlas.regions
+    }
+
+    fun jump() {
+        moveTo.setPosition(positionX, positionY + 160f)
+        moveTo.duration = 2f
+        addAction(moveTo)
+
     }
 }
