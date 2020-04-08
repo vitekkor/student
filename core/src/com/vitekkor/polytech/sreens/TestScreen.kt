@@ -63,8 +63,8 @@ class TestScreen(core: Core) : Screen {
          //control our player using immediate impulses
 
          //control our player using immediate impulses
-         //if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) actor1.go(true)
-        // if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) actor1.go(false)
+         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) actor1.go(true)
+         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) actor1.go(false)
          if (Gdx.input.isKeyPressed(Input.Keys.SPACE))
              actor1.jump()
          //if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) player.fire()

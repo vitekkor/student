@@ -7,9 +7,7 @@ import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.actions.Actions.*
-import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction
 import com.badlogic.gdx.scenes.scene2d.actions.RunnableAction
-import com.badlogic.gdx.utils.Pool
 import com.vitekkor.polytech.supportFiles.AssetsLoader
 
 
@@ -24,14 +22,10 @@ class Student(x: Float, y: Float, private var width: Int, private var height: In
     private var currentState: State
     private var position = Vector2(x, y)
     private var velocity = Vector2(0F, 0F)
-    private val pool: Pool<MoveToAction> = object : Pool<MoveToAction>() {
-        override fun newObject(): MoveToAction? {
-            return MoveToAction()
-        }
-    }
-    private var jumpUp = true
-    private var jumpDown = false
     private var jumped = true
+    private val jumpUp = moveTo(0f, 0f, 1 / 7f, Interpolation.linear)
+    private val jumpDown = moveTo(0f, 0f, 1 / 7f, Interpolation.linear)
+    private var go = true
 
     init {
         currentState = State.STANDING
@@ -44,24 +38,28 @@ class Student(x: Float, y: Float, private var width: Int, private var height: In
         if (jumped) {
             jumped = false
             targetPosition = Vector2(position.x, position.y + 120f)
-            addAction(sequence(moveTo(targetPosition.x, targetPosition.y, 1 / 7f, Interpolation.linear),
-                    object : RunnableAction() {
+            jumpUp.setPosition(targetPosition.x, targetPosition.y)
+            addAction(sequence(jumpUp, object : RunnableAction() {
+                override fun run() {
+                    targetPosition = Vector2(position.x, position.y - 120f)
+                    jumpDown.setPosition(targetPosition.x, targetPosition.y)
+                    addAction(sequence(jumpDown, object : RunnableAction() {
                         override fun run() {
-                            addAction(sequence(moveTo(targetPosition.x, targetPosition.y - 120f, 1 / 7f, Interpolation.linear),
-                                    object : RunnableAction() {
-                                        override fun run() {
-                                            jumped = true
-                                        }
-                                    })
-                            )
+                            jumped = true
                         }
-                    })
+                    }))
+                }
+            })
             )
         }
     }
+    private fun move(){
 
-    fun onClick() {
-        velocity.y = -140f
+    }
+
+    fun go(right: Boolean) {
+        position = if (right) Vector2(position.x + 10f, position.y) else Vector2(position.x - 10f, position.y)
+        go = true
     }
 
     override fun getX(): Float {

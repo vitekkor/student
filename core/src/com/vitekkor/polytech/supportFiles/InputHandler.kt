@@ -7,7 +7,6 @@ import com.vitekkor.polytech.objects.Student
 class InputHandler(student: Student) : InputProcessor {
     private val student = student
     override fun touchDown(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
-        student.onClick()
         return true
     }
 
