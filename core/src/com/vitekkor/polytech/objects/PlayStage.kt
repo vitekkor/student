@@ -31,4 +31,8 @@ class PlayStage(screenViewport: ScreenViewport?) : Stage(screenViewport) {
         return hardKeyListener
     }
 
+    override fun draw() {
+        super.draw()
+
+    }
 }

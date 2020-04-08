@@ -5,8 +5,9 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator
-import com.vitekkor.polytech.objects.Buttons
-import com.vitekkor.polytech.sreens.MainMenuScreen
+import com.vitekkor.polytech.supportFiles.AssetsLoader
+import com.vitekkor.polytech.sreens.PlayScreen
+import com.vitekkor.polytech.sreens.TestScreen
 
 
 class Core : Game() {
@@ -17,8 +18,8 @@ class Core : Game() {
     var levels: BitmapFont? = null
     //settings file
     var settings = null
-    private val characters = "абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯabcdefghijklmnopqrstuvwxyz" +
-            "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789][_!$%#@|\\/?-+=()*&.;,{}\"´`'<>"
+    private val characters = "абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ" +
+            "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789][_!$%#@|\\/?-+=()*&.;,{}\"´`'<>"
 
     override fun create() {
         //buttons = Buttons(this)
@@ -37,6 +38,12 @@ class Core : Game() {
         levels!!.color = Color.WHITE
         //destroying the generator as unnecessary
         generator.dispose()
-        this.setScreen(MainMenuScreen(this))
+        AssetsLoader.load()
+        this.setScreen(TestScreen(this))
+    }
+
+    override fun dispose() {
+        super.dispose()
+        AssetsLoader.dispose()
     }
 }

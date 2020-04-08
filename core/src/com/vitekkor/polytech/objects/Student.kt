@@ -1,61 +1,99 @@
 package com.vitekkor.polytech.objects
 
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.graphics.g2d.Animation
 import com.badlogic.gdx.graphics.g2d.Batch
-import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.math.Interpolation
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.Actor
+import com.badlogic.gdx.scenes.scene2d.actions.Actions.moveTo
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction
 import com.badlogic.gdx.utils.Pool
+import com.vitekkor.polytech.supportFiles.AssetsLoader
 
 
-class Studen(textureAtlas: TextureAtlas) : Actor() {
+class Student(x: Float, y: Float, private var width: Int, private var height: Int) : Actor() {
+    enum class State {
+        FALLING, JUMPING, STANDING, RUNNING, GROWING, DEAD
+    }
 
-    private var moveTo = MoveToAction()
-    private var regions = textureAtlas.regions
-    private var animation: Animation<Any>? = null
-    var stateTime = 0f
-    private var positionX = 0f
-    private var positionY = 0f
-    private var myWidth = 0f
-    private var myHeight = 0f
+    private var targetPosition = Vector2(x, y)
+    private var runTime = 0f
+    private var previousState: State
+    private var currentState: State
+    private var position = Vector2(x, y)
+    private var velocity = Vector2(0F, 0F)
+    private val pool: Pool<MoveToAction> = object : Pool<MoveToAction>() {
+        override fun newObject(): MoveToAction? {
+            return MoveToAction()
+        }
+    }
+    private var jumpUp = true
+    private var jumpDown = false
+    private var jumped = true
 
     init {
-        setPosition(20f, 480f)
-        setScale(1.5f)
-        animation = Animation(1 / 8f, regions)
+        currentState = State.STANDING
+        previousState = currentState
+    }
+
+    fun update(delta: Float) {}
+
+    fun jump() {
+        if (jumped) {
+            targetPosition = Vector2(position.x, position.y + 120f)
+            jumpUp = true
+            jumpDown = true
+            jumped = false
+        }
+    }
+
+    fun onClick() {
+        velocity.y = -140f
+    }
+
+    override fun getX(): Float {
+        return position.x
+    }
+
+    override fun getY(): Float {
+        return position.y
+    }
+
+    override fun getX(alignment: Int): Float {
+        return position.x
+    }
+
+    override fun getY(alignment: Int): Float {
+        return position.y
     }
 
     override fun draw(batch: Batch, parentAlpha: Float) {
-        setSize(240f, 160f)
         super.draw(batch, parentAlpha)
-        stateTime += Gdx.graphics.deltaTime
-        batch.draw(animation!!.getKeyFrame(stateTime, true) as TextureRegion, positionX, positionY, myWidth, myHeight)
+        runTime += Gdx.graphics.deltaTime
+        if (jumpUp) {
+            jumpUp = false
+            addAction(moveTo(targetPosition.x, targetPosition.y, 1 / 7f, Interpolation.linear))
+        }
+        if (!jumpDown && actions.isEmpty) jumped = true
+        if (jumpDown && actions.isEmpty) {
+            jumpDown = false
+            addAction(moveTo(targetPosition.x, targetPosition.y - 120f, 1 / 7f, Interpolation.linear))
+        }
+        targetPosition = position
+        batch.draw(AssetsLoader.studentAnimation!!.getKeyFrame(runTime, true) as TextureRegion, x, y, getWidth(), getHeight())
     }
 
-    override fun setPosition(x: Float, y: Float) {
-        positionX = x
-        positionY = y
+    override fun getWidth(): Float {
+        return width.toFloat()
     }
 
-    override fun setSize(width: Float, height: Float) {
-        myHeight = height
-        myWidth = width
+    override fun getHeight(): Float {
+        return height.toFloat()
     }
 
-    override fun setScale(scaleXY: Float) {
-        setSize(width * scaleXY, height * scaleXY)
-    }
-
-    fun setRegion(newTextureAtlas: TextureAtlas) {
-        regions = newTextureAtlas.regions
-    }
-
-    fun jump() {
-        moveTo.setPosition(positionX, positionY + 160f)
-        moveTo.duration = 2f
-        addAction(moveTo)
-
+    override fun setPosition(x: Float, y: Float, alignment: Int) {
+        position.x = x
+        position.y = y
     }
 }

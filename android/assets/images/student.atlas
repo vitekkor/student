@@ -19,56 +19,14 @@ student-default2
   index: -1
 student-default3
   rotate: false
-  xy: 769, 60
+  xy: 617, 60
   size: 70, 120
   orig: 70, 120
   offset: 0, 0
   index: -1
 student-default4
   rotate: false
-  xy: 617, 60
-  size: 70, 120
-  orig: 70, 120
-  offset: 0, 0
-  index: -1
-student-default5
-  rotate: false
-  xy: 540, 60
-  size: 70, 120
-  orig: 70, 120
-  offset: 0, 0
-  index: -1
-student-default6
-  rotate: false
-  xy: 617, 60
-  size: 70, 120
-  orig: 70, 120
-  offset: 0, 0
-  index: -1
-student-default7
-  rotate: false
   xy: 769, 60
-  size: 70, 120
-  orig: 70, 120
-  offset: 0, 0
-  index: -1
-student-default8
-  rotate: false
-  xy: 617, 60
-  size: 70, 120
-  orig: 70, 120
-  offset: 0, 0
-  index: -1
-student-default9
-  rotate: false
-  xy: 617, 60
-  size: 70, 120
-  orig: 70, 120
-  offset: 0, 0
-  index: -1
-student-default10
-  rotate: false
-  xy: 540, 60
   size: 70, 120
   orig: 70, 120
   offset: 0, 0
