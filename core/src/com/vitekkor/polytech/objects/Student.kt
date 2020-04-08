@@ -6,8 +6,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.Actor
-import com.badlogic.gdx.scenes.scene2d.actions.Actions.moveTo
+import com.badlogic.gdx.scenes.scene2d.actions.Actions.*
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction
+import com.badlogic.gdx.scenes.scene2d.actions.RunnableAction
 import com.badlogic.gdx.utils.Pool
 import com.vitekkor.polytech.supportFiles.AssetsLoader
 
@@ -41,10 +42,21 @@ class Student(x: Float, y: Float, private var width: Int, private var height: In
 
     fun jump() {
         if (jumped) {
-            targetPosition = Vector2(position.x, position.y + 120f)
-            jumpUp = true
-            jumpDown = true
             jumped = false
+            targetPosition = Vector2(position.x, position.y + 120f)
+            addAction(sequence(moveTo(targetPosition.x, targetPosition.y, 1 / 7f, Interpolation.linear),
+                    object : RunnableAction() {
+                        override fun run() {
+                            addAction(sequence(moveTo(targetPosition.x, targetPosition.y - 120f, 1 / 7f, Interpolation.linear),
+                                    object : RunnableAction() {
+                                        override fun run() {
+                                            jumped = true
+                                        }
+                                    })
+                            )
+                        }
+                    })
+            )
         }
     }
 
@@ -71,15 +83,6 @@ class Student(x: Float, y: Float, private var width: Int, private var height: In
     override fun draw(batch: Batch, parentAlpha: Float) {
         super.draw(batch, parentAlpha)
         runTime += Gdx.graphics.deltaTime
-        if (jumpUp) {
-            jumpUp = false
-            addAction(moveTo(targetPosition.x, targetPosition.y, 1 / 7f, Interpolation.linear))
-        }
-        if (!jumpDown && actions.isEmpty) jumped = true
-        if (jumpDown && actions.isEmpty) {
-            jumpDown = false
-            addAction(moveTo(targetPosition.x, targetPosition.y - 120f, 1 / 7f, Interpolation.linear))
-        }
         targetPosition = position
         batch.draw(AssetsLoader.studentAnimation!!.getKeyFrame(runTime, true) as TextureRegion, x, y, getWidth(), getHeight())
     }
