@@ -78,8 +78,8 @@ class TestScreen(core: Core) : Screen {
         Gdx.gl.glClearColor(0F, 0F, 0F, 1F)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
         handleInput(delta)
-        stage.act()
         stage.draw()
+        stage.act(delta)
     }
 
     override fun pause() {}
