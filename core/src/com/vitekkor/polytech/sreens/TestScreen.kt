@@ -59,7 +59,7 @@ class TestScreen(core: Core) : Screen {
         })
     }
 
-     private fun handleInput(dt: Float) {
+     private fun handleInput() {
          //control our player using immediate impulses
 
          //control our player using immediate impulses
@@ -77,7 +77,8 @@ class TestScreen(core: Core) : Screen {
     override fun render(delta: Float) {
         Gdx.gl.glClearColor(0F, 0F, 0F, 1F)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
-        handleInput(delta)
+        handleInput()
+        actor1.update(delta)
         stage.draw()
         stage.act(delta)
     }
