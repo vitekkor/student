@@ -88,7 +88,6 @@ class ExitScreen(core: Core) : Screen {
 
     override fun dispose() {
         stage.dispose()
-        game.dispose()
     }
 
 }

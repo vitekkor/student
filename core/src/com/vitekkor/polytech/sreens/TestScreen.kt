@@ -20,7 +20,6 @@ class TestScreen(core: Core) : Screen {
 
     private var stage: PlayStage = PlayStage(ScreenViewport())
     private var table: Table = Table()
-    private var studentStyle = TextureAtlas(Gdx.files.internal("images/student.atlas"))
     private var space: VisTextButton
     private var actor1: Student
 
@@ -33,11 +32,6 @@ class TestScreen(core: Core) : Screen {
         space = VisTextButton("")
         space.setPosition(Gdx.graphics.width - 120F, 240f)
         stage.addActor(space)
-        space.addListener(object : ClickListener() {
-            override fun touchUp(event: InputEvent?, x: Float, y: Float, pointer: Int, button: Int) {
-                //actor1.jump()
-            }
-        })
         Gdx.input.inputProcessor = stage
         Gdx.input.setCatchKey(Input.Keys.BACK, true)
         stage.setHardKeyListener(object : PlayStage.OnHardKeyListener {
@@ -47,7 +41,7 @@ class TestScreen(core: Core) : Screen {
                     dispose()
                 }
                 if (keyCode == Input.Keys.SPACE && state == 1) {
-                    //actor1.jump()
+                    actor1.jump()
                 }
                /* if (keyCode == Input.Keys.LEFT && state == 1) {
                     actor1.go(false)
@@ -65,7 +59,7 @@ class TestScreen(core: Core) : Screen {
          //control our player using immediate impulses
          if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) actor1.go(true)
          if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) actor1.go(false)
-         if (Gdx.input.isKeyPressed(Input.Keys.SPACE))
+         if (Gdx.input.isKeyPressed(Input.Keys.SPACE) || space.isPressed)
              actor1.jump()
          //if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) player.fire()
      }
@@ -91,7 +85,6 @@ class TestScreen(core: Core) : Screen {
 
     override fun dispose() {
         stage.dispose()
-        game.dispose()
     }
 
 }
