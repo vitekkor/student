@@ -12,31 +12,30 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener
 import com.badlogic.gdx.utils.Align
 import com.badlogic.gdx.utils.viewport.ScreenViewport
 import com.vitekkor.polytech.Core
-import com.vitekkor.polytech.objects.Buttons
 import com.vitekkor.polytech.objects.PlayStage
+import com.vitekkor.polytech.supportFiles.AssetsLoader
 
 
 class ExitScreen(core: Core) : Screen {
     private var game: Core = core
-    private val buttons = Buttons(core)
     private var stage: PlayStage = PlayStage(ScreenViewport())
     private var yes: TextButton
     private var no: TextButton
     private var table: Table
-    private var labelStyle: Label.LabelStyle
+    private var labelStyle: Label.LabelStyle = AssetsLoader.labelStyle
     private val text = "Are you sure you want to quit?"
 
     init {
-        labelStyle = buttons.labelStyle
         val label = Label(text, labelStyle)
         label.setAlignment(Align.center)
-        val textButtonStyle = buttons.textButtonStyle
+        val textButtonStyle = AssetsLoader.textButtonStyle
         table = Table()
         table.center()
         table.setFillParent(true)
         yes = TextButton("Yes", textButtonStyle)
         yes.addListener(object : ClickListener() {
             override fun touchUp(event: InputEvent?, x: Float, y: Float, pointer: Int, button: Int) {
+                AssetsLoader.dispose()
                 Gdx.app.exit()
                 dispose()
             }

@@ -2,39 +2,70 @@ package com.vitekkor.polytech.supportFiles
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.assets.AssetManager
-import com.badlogic.gdx.graphics.Texture
+import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver
 import com.badlogic.gdx.graphics.g2d.Animation
+import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader
+import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader
+import com.badlogic.gdx.scenes.scene2d.ui.*
 
 
 class AssetsLoader {
-    private val assetsManager = AssetManager()
-
     companion object {
-        var texture: Texture? = null
         var bg: TextureRegion? = null
-        var grass: TextureRegion? = null
-
         private lateinit var regions:
                 com.badlogic.gdx.utils.Array<AtlasRegion>
         var studentAnimation: Animation<Any>? = null
-        var student: TextureRegion? = null
-        var birdDown: TextureRegion? = null
-        var birdUp: TextureRegion? = null
-
-        var skullUp: TextureRegion? = null
-        var skullDown: TextureRegion? = null
-        var bar: TextureRegion? = null
+        private val resolver = InternalFileHandleResolver()
+        val manager = AssetManager(resolver, true)
+        lateinit var touchPadStyle: Touchpad.TouchpadStyle
+        lateinit var textButtonStyle: TextButton.TextButtonStyle
+        lateinit var levelStyle: TextButton.TextButtonStyle
+        lateinit var labelStyle: Label.LabelStyle
+        lateinit var skin: Skin
+        lateinit var progressBar: ProgressBar.ProgressBarStyle
+        private const val characters = "абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ" +
+                "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789][_!$%#@|\\/?-+=()*&.;,{}\"´`'<>"
 
         fun load() {
-            val textureAtlas = TextureAtlas(Gdx.files.internal("images/student.atlas"))
-            regions = textureAtlas.regions
-            studentAnimation = Animation(1/ 10F, regions)
-            studentAnimation!!.playMode = Animation.PlayMode.LOOP_PINGPONG
+            manager.load("skin/uiskin.json", Skin::class.java)
+            manager.finishLoading()
+            skin = manager.get("skin/uiskin.json", Skin::class.java)
+            progressBar = skin.get("default-horizontal", ProgressBar.ProgressBarStyle::class.java)
+            manager.setLoader(BitmapFont::class.java, ".ttf", FreetypeFontLoader(resolver))
+            manager.setLoader(FreeTypeFontGenerator::class.java, FreeTypeFontGeneratorLoader(resolver))
+            manager.load("images/student.atlas", TextureAtlas::class.java)
+            val smallFont = FreetypeFontLoader.FreeTypeFontLoaderParameter()
+            smallFont.fontFileName = "fonts/font.ttf"
+            smallFont.fontParameters.size = Gdx.graphics.width / 72
+            smallFont.fontParameters.characters = characters
+            manager.load("smallFont.ttf", BitmapFont::class.java, smallFont)
+            val bigFont = FreetypeFontLoader.FreeTypeFontLoaderParameter()
+            bigFont.fontFileName = "fonts/font.ttf"
+            bigFont.fontParameters.size = Gdx.graphics.width / 24
+            bigFont.fontParameters.characters = characters
+            manager.load("bigFont.ttf", BitmapFont::class.java, bigFont)
         }
 
-        fun dispose() {}
+        fun setLoadedAssets() {
+            regions = manager.get("images/student.atlas", TextureAtlas::class.java).regions
+            studentAnimation = Animation(1 / 10F, regions)
+            studentAnimation!!.playMode = Animation.PlayMode.LOOP_PINGPONG
+            textButtonStyle = skin.get("round", TextButton.TextButtonStyle::class.java)
+            textButtonStyle.font = manager.get("smallFont.ttf", BitmapFont::class.java)
+            levelStyle = skin.get("round", TextButton.TextButtonStyle::class.java)
+            levelStyle.font = manager.get("bigFont.ttf", BitmapFont::class.java)
+            labelStyle = skin.get(Label.LabelStyle::class.java)
+            labelStyle.font = manager.get("smallFont.ttf", BitmapFont::class.java)
+            touchPadStyle = skin.get(Touchpad.TouchpadStyle::class.java)
+        }
+
+        fun dispose() {
+            manager.dispose()
+        }
     }
 }

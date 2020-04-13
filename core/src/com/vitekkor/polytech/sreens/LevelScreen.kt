@@ -12,19 +12,17 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener
 import com.badlogic.gdx.utils.viewport.ScreenViewport
 import com.vitekkor.polytech.Core
 import com.vitekkor.polytech.objects.PlayStage
-import com.vitekkor.polytech.objects.Buttons
+import com.vitekkor.polytech.supportFiles.AssetsLoader
 
 class LevelScreen(game: Core) : Screen {
-    private val buttons = Buttons(game)
     private var stage: PlayStage = PlayStage(ScreenViewport())
     private var f1st: TextButton
     private var s2nd: TextButton
     private var table: Table
-    private var labelStyle: Label.LabelStyle
+    private var labelStyle = AssetsLoader.labelStyle
 
     init {
-        labelStyle = buttons.labelStyle
-        val levelStyle = buttons.levelStyle
+        val levelStyle = AssetsLoader.levelStyle
         table = Table()
         table.center()
         table.setFillParent(true)

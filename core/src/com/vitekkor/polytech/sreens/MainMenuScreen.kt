@@ -10,13 +10,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener
 import com.badlogic.gdx.utils.viewport.ScreenViewport
 import com.vitekkor.polytech.Core
-import com.vitekkor.polytech.objects.Buttons
 import com.vitekkor.polytech.objects.PlayStage
+import com.vitekkor.polytech.supportFiles.AssetsLoader
 
 
 class MainMenuScreen(core: Core) : Screen {
     private var game: Core = core
-    private val buttons = Buttons(core)
     private var stage: PlayStage = PlayStage(ScreenViewport())
     private var play: TextButton
     private var exit: TextButton
@@ -24,7 +23,7 @@ class MainMenuScreen(core: Core) : Screen {
     private var table: Table
 
     init {
-        val textButtonStyle = buttons.textButtonStyle
+        val textButtonStyle = AssetsLoader.textButtonStyle
         table = Table()
         table.row().pad(20F)
         table.center()
