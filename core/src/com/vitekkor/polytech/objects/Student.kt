@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.Actor
+import com.badlogic.gdx.scenes.scene2d.Stage
 import com.vitekkor.polytech.supportFiles.AssetsLoader
 import com.vitekkor.polytech.supportFiles.Move
 
@@ -19,6 +20,7 @@ class Student(x: Float, y: Float, private var width: Int, private var height: In
     private var jumped = true
     private var jumpDown = false
     private var myMove = Move(1 / 60f, Interpolation.linear)
+
 
     init {
         myMove.duration = 1 / 60f
@@ -56,7 +58,8 @@ class Student(x: Float, y: Float, private var width: Int, private var height: In
     }
 
     fun go(right: Boolean) {
-        targetPosition = if (right) Vector2(targetPosition.x + 5f, targetPosition.y) else Vector2(targetPosition.x - 5f, targetPosition.y)
+        targetPosition = if (right) Vector2(targetPosition.x + 5f, targetPosition.y)
+        else Vector2(targetPosition.x - 5f, targetPosition.y)
     }
 
     override fun getX(): Float {

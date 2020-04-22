@@ -1,0 +1,7 @@
+{
+  "lvl1": {
+    "texture": "levels/lvl1.png",
+    "position": [0f, 0f],
+    "borders": [[1f,1f,2f,2f], [3f,1f,4f,f]]
+  }
+}

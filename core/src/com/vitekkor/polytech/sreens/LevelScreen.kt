@@ -5,17 +5,17 @@ import com.badlogic.gdx.Input
 import com.badlogic.gdx.Screen
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.scenes.scene2d.InputEvent
+import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener
 import com.badlogic.gdx.utils.viewport.ScreenViewport
 import com.vitekkor.polytech.Core
-import com.vitekkor.polytech.objects.PlayStage
 import com.vitekkor.polytech.supportFiles.AssetsLoader
 
 class LevelScreen(game: Core) : Screen {
-    private var stage: PlayStage = PlayStage(ScreenViewport())
+    private var stage: Stage = Stage(ScreenViewport())
     private var f1st: TextButton
     private var s2nd: TextButton
     private var table: Table
@@ -45,12 +45,13 @@ class LevelScreen(game: Core) : Screen {
         stage.addActor(table)
         Gdx.input.inputProcessor = stage
         Gdx.input.setCatchKey(Input.Keys.BACK, true)
-        stage.setHardKeyListener(object : PlayStage.OnHardKeyListener {
-            override fun onHardKey(keyCode: Int, state: Int) {
-                if (keyCode == Input.Keys.BACK && state == 1) {
+        stage.addListener(object : ClickListener() {
+            override fun keyDown(event: InputEvent?, keycode: Int): Boolean {
+                if (keycode == Input.Keys.BACK || keycode == Input.Keys.ESCAPE) {
                     game.screen = MainMenuScreen(game)
                     dispose()
                 }
+                return super.keyDown(event, keycode)
             }
         })
     }

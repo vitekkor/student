@@ -12,6 +12,10 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader
 import com.badlogic.gdx.scenes.scene2d.ui.*
+import com.badlogic.gdx.utils.Json
+import com.badlogic.gdx.utils.JsonReader
+import com.badlogic.gdx.utils.JsonValue
+import java.io.File
 
 
 class AssetsLoader {
@@ -27,6 +31,7 @@ class AssetsLoader {
         lateinit var levelStyle: TextButton.TextButtonStyle
         lateinit var labelStyle: Label.LabelStyle
         lateinit var skin: Skin
+        var levels: JsonValue? = null
         lateinit var progressBar: ProgressBar.ProgressBarStyle
         private const val characters = "абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ" +
                 "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789][_!$%#@|\\/?-+=()*&.;,{}\"´`'<>"
@@ -62,9 +67,17 @@ class AssetsLoader {
             labelStyle = skin.get(Label.LabelStyle::class.java)
             labelStyle.font = manager.get("smallFont.ttf", BitmapFont::class.java)
             touchPadStyle = skin.get(Touchpad.TouchpadStyle::class.java)
+            loadLevels()
+        }
+
+        private fun loadLevels() {
+            val json = Gdx.files.internal("levels/levels.json").readString()
+            val jsonReader = JsonReader()
+            levels = jsonReader.parse(json)
         }
 
         fun dispose() {
+            levels = null
             manager.dispose()
         }
     }

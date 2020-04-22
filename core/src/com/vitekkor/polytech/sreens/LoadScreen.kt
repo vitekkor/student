@@ -3,22 +3,22 @@ package com.vitekkor.polytech.sreens
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Screen
 import com.badlogic.gdx.graphics.GL20
+import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar
 import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import com.badlogic.gdx.utils.viewport.ScreenViewport
 import com.vitekkor.polytech.Core
-import com.vitekkor.polytech.objects.PlayStage
 import com.vitekkor.polytech.supportFiles.AssetsLoader
 
 class LoadScreen(core: Core) : Screen {
     private val game = core
-    private var load = 0f
-    private val stage = PlayStage(ScreenViewport())
+    private val stage = Stage(ScreenViewport())
     private val progressBar = ProgressBar(0f, 100f, 10f, false, AssetsLoader.progressBar)
 
     init {
-        progressBar.setPosition(Gdx.graphics.width /4f, Gdx.graphics.height /2f)
+        progressBar.setPosition(Gdx.graphics.width / 4f, Gdx.graphics.height * 0.45f)
+        progressBar.setSize(Gdx.graphics.width * 0.5f, Gdx.graphics.height * 0.1f)
         stage.addActor(progressBar)
     }
 
@@ -32,6 +32,8 @@ class LoadScreen(core: Core) : Screen {
         if (AssetsLoader.manager.update()) {
             AssetsLoader.setLoadedAssets()
             progressBar.value = 100f
+            stage.draw()
+            stage.act(delta)
             game.screen = MainMenuScreen(game)
         }
         progressBar.value = AssetsLoader.manager.progress * 100f
